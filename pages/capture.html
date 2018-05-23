@@ -1,0 +1,74 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Capture</title>
+        <style >
+			body{
+				background: linear-gradient(to right, #faca42, #f5a826);
+			}
+			.btn, .btn-large, .btn-small {
+				text-decoration: none;
+				color: #fff;
+				background-color: #26a69a;
+				text-align: center;
+				letter-spacing: .5px;
+				-webkit-transition: background-color .2s ease-out;
+				transition: background-color .2s ease-out;
+				cursor: pointer;
+
+				font-size: 14px;
+				outline: 0;
+				border: none;
+				border-radius: 2px;
+				display: inline-block;
+				height: 36px;
+				line-height: 36px;
+				padding: 0 16px;
+				text-transform: uppercase;
+				vertical-align: middle;
+				-webkit-tap-highlight-color: transparent;
+}
+        .main{
+			text-align: center;
+			padding-top: 20px;
+		}
+		#h2{
+			font-size: 24px;
+		}
+		#vid{
+			background: #fff;
+			padding: 10px;
+			margin-bottom: 15px;
+		}
+		#canvas{
+			display: none;
+		}
+		#show-link{
+			font-size: 18px;
+			padding: 1px 7px;
+		}
+		.video-wrp{
+			max-height: 400px;
+			overflow-y: scroll;
+		}
+		</style>
+    </head>
+    <body>
+		<div class="main">
+			<h2 id="h2"></h2>
+			<div id="show-link"></div>
+			<div class="video-wrp-inner"></div>
+			<div class="video-wrp">
+				<video id="video" autoplay></video>
+			</div>
+			<button type="button" id="capture" class="btn">Start capture</button><br>
+			<br>
+			<canvas id="canvas" ></canvas>
+	        <script src="/lib/gumhelper.js"></script>
+	        <script src="/lib/jQuery.js"></script>
+	        <script src="/js/stream.js"></script>
+	    </div>
+    </body>
+</html>
