@@ -1,4 +1,4 @@
-# 1click-capture-webcam-as-png | https://1ce.org
+1click-stream-desktop | https://1ce.org
 
 
 This extension is an open-source 📰 extension. What is it mean for you:
