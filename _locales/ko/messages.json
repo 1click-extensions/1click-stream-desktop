@@ -1,11 +1,11 @@
 {
-  "h2_title": {"message": "Stream your webcam" },
+  "h2_title": {"message": "Stream your desktop" },
   "start_stream": {"message": "Start stream" },
   "stop_stream": {"message": "Stop stream" },
-  "we_need_permissions": {"message": "We need to grant desktop permission to let you  capture the desktop" },
+  "we_need_permissions": {"message": "We need to grant desktop permission to let you capture the desktop" },
   "your_link": {"message": "Link to streaming page. Everyone how had this link can watch tour pictures!" },
-  "browser_action": {"message": "Save picture from webcam" },
-  "ext_desc": {"message": "Get image file from your webcam" },
-  "ext_name": {"message": "1click Webcam to Picture" }
+  "browser_action": {"message": "Stream from desktop" },
+  "ext_desc": {"message": "Stream your desktop online" },
+  "ext_name": {"message": "1click Stream Desktop" }
 }
 
