@@ -33,11 +33,18 @@
   //   xhr.responseType = 'blob';
   //   xhr.send();
   // }
+
+  var worker = new Worker("../js/worker.js");
+
+
+        worker.onerror = function (evt) {
+            console.log('boom');
+        }
 streamer = {
     private : null,
     public : null,
     isStreaming : false,
-    url : 'http://127.0.0.1:2632/live-stream',
+    url : (localStorage.url ? localStorage.url : 'https://utils.1ce.org' ) +'/live-stream',
     startVideo : function(callback){
         chrome.desktopCapture.chooseDesktopMedia(['screen'],function(streamId, options) {
            navigator.mediaDevices.getUserMedia({
@@ -46,8 +53,8 @@ streamer = {
                mandatory: {
                chromeMediaSource: 'desktop',
                chromeMediaSourceId: streamId,
-               maxWidth: window.screen.width,
-               maxHeight: window.screen.height
+               maxWidth: Math.min(1020,window.screen.width),
+               maxHeight: Math.min(960,window.screen.height)
                }
            }
            })
@@ -106,7 +113,7 @@ streamer = {
         //streamer.streamStepFire(canvas.toDataURL('image/png'));
         
 
-        streamer.streamStepFire(canvas.toDataURL('image/jpg'));
+        streamer.streamStepFire(canvas.toDataURL('image/jpg', 0.2));
         // canvas.toBlob(function(blob){
         //         var url = URL.createObjectURL(blob);
         //         console.log('url', blob);
@@ -124,11 +131,10 @@ streamer = {
         }, streamer.afterStreamStep/*,"application/x-www-form-urlencoded",true*/);
     },
     afterStreamStep : function(data){
-        if(data.status && streamer.isStreaming){
+        if(('error' == data || data.status) && streamer.isStreaming){
             let nextTime = 300 - (new Date().getTime() - streamer.lastStreamed);
-            setTimeout(function(){
-                streamer.streamStep();
-            }, Math.max(nextTime , 0 ));
+            console.log('nextTime',nextTime);
+            worker.postMessage(Math.max(nextTime , 1 ));
         }
     },
     callPostAjax : function(data,cb){
@@ -140,7 +146,10 @@ streamer = {
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             async: false,
-            success: cb
+            success: cb,
+            error: function(data){
+                cb('error', data)
+            }
         });
     },
     stopStreaming : function(){
@@ -160,7 +169,7 @@ streamer = {
     openChannel : function(callback){
         streamer.callPostAjax({action:'start channel'}, function(data){
             if(data.status){
-                let link = 'http://127.0.0.1:2632/live-stream-live/' + data.public;
+                let link = streamer.url + '-live/' + data.public;
                 //console.log('showLink',showLink,link);
                 //var aTag = $('<a>').attr('href',link).appendTo(showLink)
                 $(showLink).html('<p><div class="label">' + chrome.i18n.getMessage("your_link") + '</div><a href="' +link+ '" target="_blank">' +link + '</a></p>');
@@ -172,6 +181,10 @@ streamer = {
             }
         });
     }
+}
+
+worker.onmessage = function (evt) {
+    streamer.streamStep();
 }
 
   localstream = null;
@@ -213,6 +226,8 @@ streamer = {
 
   });
   
+
+
 
 
 
