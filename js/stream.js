@@ -155,11 +155,13 @@ streamer = {
     stopStreaming : function(){
         captureButton.innerText = chrome.i18n.getMessage("start_stream");
         streamer.isStreaming = false;
+        checkIfRankNeededAndAndAddRank();
     },
     startStreaming : function(){
         captureButton.innerText = chrome.i18n.getMessage("stop_stream");
         streamer.isStreaming = true;
         streamer.openChannel(function(){
+            
             streamer.streamStep();
         });
         
