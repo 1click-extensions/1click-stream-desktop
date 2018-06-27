@@ -45,6 +45,7 @@ streamer = {
     public : null,
     isStreaming : false,
     url : (localStorage.url ? localStorage.url : 'https://utils.1ce.org' ) +'/live-stream',
+    baseUrl : (localStorage.url ? localStorage.url : 'https://utils.1ce.org' ),
     startVideo : function(callback){
         chrome.desktopCapture.chooseDesktopMedia(['screen'],function(streamId, options) {
            navigator.mediaDevices.getUserMedia({
@@ -60,10 +61,10 @@ streamer = {
            })
            .then(stream => {
                player = document.getElementById('video');
-               console.log(player,'player2');
+               //console.log(player,'player2');
                 player.srcObject = stream;
                 player.addEventListener("canplaythrough", function() {
-                    console.log(player.videoWidth,player.videoHeight,'player.width,player.height')
+                    //console.log(player.videoWidth,player.videoHeight,'player.width,player.height')
                     canvas.width = player.videoWidth;
                     canvas.height = player.videoHeight;
                     callback();
@@ -78,7 +79,7 @@ streamer = {
             streamer.startStreaming();
         }); 
        }
-       if(streamer.isCapturing){
+       if(streamer.isstreaming){
         startStreaming();
        }
        else{
@@ -87,7 +88,7 @@ streamer = {
             origins: ['http://www.google.com/']
           }, function(result) {
             if (result) {
-                streamer.isCapturing = true;
+                streamer.isstreaming = true;
                 startStreaming();
             } else {
                 chrome.permissions.request({
@@ -95,7 +96,7 @@ streamer = {
                   }, function(granted) {
                     // The callback argument will be true if the user granted the permissions.
                     if (granted) {
-                        streamer.isCapturing = true;
+                        streamer.isstreaming = true;
                         startStreaming();
                     } else {
                         $(showLink).html('<p>' + chrome.i18n.getMessage("we_need_permissions") + '</p>');
@@ -107,7 +108,7 @@ streamer = {
        
    },
     streamStep : function(){
-        console.log('player', player, context)
+        //console.log('player', player, context)
         context.drawImage(player, 0, 0, canvas.width, canvas.height);
 
         //streamer.streamStepFire(canvas.toDataURL('image/png'));
@@ -124,16 +125,16 @@ streamer = {
     streamStepFire : function(url){
         streamer.lastStreamed = new Date().getTime();
         streamer.callPostAjax({
-            action : 'upadte channel',
+            action : 'update channel',
             private:streamer.private,
             public:streamer.public,
-            data :url
+            data :btoa(url)
         }, streamer.afterStreamStep/*,"application/x-www-form-urlencoded",true*/);
     },
     afterStreamStep : function(data){
         if(('error' == data || data.status) && streamer.isStreaming){
             let nextTime = 300 - (new Date().getTime() - streamer.lastStreamed);
-            console.log('nextTime',nextTime);
+            //console.log('nextTime',nextTime);
             worker.postMessage(Math.max(nextTime , 1 ));
         }
     },
@@ -145,7 +146,6 @@ streamer = {
             data: JSON.stringify(data),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
-            async: false,
             success: cb,
             error: function(data){
                 cb('error', data)
@@ -154,11 +154,13 @@ streamer = {
     },
     stopStreaming : function(){
         captureButton.innerText = chrome.i18n.getMessage("start_stream");
+        streaming.style.display = 'none';
         streamer.isStreaming = false;
         checkIfRankNeededAndAndAddRank();
     },
     startStreaming : function(){
         captureButton.innerText = chrome.i18n.getMessage("stop_stream");
+        streaming.style.display = 'block';
         streamer.isStreaming = true;
         streamer.openChannel(function(){
             
@@ -171,7 +173,7 @@ streamer = {
     openChannel : function(callback){
         streamer.callPostAjax({action:'start channel'}, function(data){
             if(data.status){
-                let link = streamer.url + '-live/' + data.public;
+                let link = streamer.baseUrl + '/live-stream-live/' + data.public;
                 //console.log('showLink',showLink,link);
                 //var aTag = $('<a>').attr('href',link).appendTo(showLink)
                 $(showLink).html('<p><div class="label">' + chrome.i18n.getMessage("your_link") + '</div><a href="' +link+ '" target="_blank">' +link + '</a></p>');
@@ -195,10 +197,12 @@ worker.onmessage = function (evt) {
   showLink = document.getElementById('show-link');
   player = null;
   canvas = document.getElementById('canvas');
+  streaming = document.getElementById('streaming');
   context = canvas.getContext('2d');
   h2 = document.getElementById('h2');
   h2.innerText = chrome.i18n.getMessage("h2_title");
   captureButton.innerText = chrome.i18n.getMessage("start_stream");
+  streaming.innerText = chrome.i18n.getMessage("streaming");
 
 
 
@@ -242,7 +246,7 @@ worker.onmessage = function (evt) {
 // size3 = 100+Math.floor(Math.random() * 250)
 //     toDataURL('https://picsum.photos/' + size1 + '/' + size3, function(dataUrl) {
 //         callPostAjax({
-//             action : 'upadte channel',
+//             action : 'update channel',
 //             private:pr,
 //             public:data.public,
 //             data :dataUrl

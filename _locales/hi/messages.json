@@ -3,7 +3,8 @@
   "start_stream": {"message": "Start stream" },
   "stop_stream": {"message": "Stop stream" },
   "we_need_permissions": {"message": "We need to grant desktop permission to let you capture the desktop" },
-  "your_link": {"message": "Link to streaming page. Everyone how had this link can watch tour pictures!" },
+  "your_link": {"message": "Link to streaming page. Everyone how had this link can watch your pictures!" },
+  "streaming": {"message": "Streaming" },
   "browser_action": {"message": "Stream from desktop" },
   "ext_desc": {"message": "Stream your desktop online" },
   "ext_name": {"message": "1click Stream Desktop" }
