@@ -156,12 +156,13 @@ streamer = {
         captureButton.innerText = chrome.i18n.getMessage("start_stream");
         streaming.style.display = 'none';
         streamer.isStreaming = false;
-        checkIfRankNeededAndAndAddRank();
+        setTimeout(fireNotify, 2000);
     },
     startStreaming : function(){
         captureButton.innerText = chrome.i18n.getMessage("stop_stream");
         streaming.style.display = 'block';
         streamer.isStreaming = true;
+        localStorage.setItem('used', 1);
         streamer.openChannel(function(){
             
             streamer.streamStep();
@@ -232,8 +233,13 @@ worker.onmessage = function (evt) {
 
   });
   
+if(localStorage.getItem('used')){
+  setTimeout(fireNotify, 5000);
+}
 
-
+function fireNotify(){
+  checkIfRankNeededAndAndAddRank();
+}
 
 
 
