@@ -7,6 +7,6 @@
   "streaming": {"message": "Streaming" },
   "browser_action": {"message": "Stream from desktop" },
   "ext_desc": {"message": "Stream your desktop online" },
-  "ext_name": {"message": "1click Stream Desktop" }
+  "ext_name": {"message": "1click Stream Desktop - Beta" }
 }
 

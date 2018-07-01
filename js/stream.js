@@ -174,7 +174,7 @@ streamer = {
     openChannel : function(callback){
         streamer.callPostAjax({action:'start channel'}, function(data){
             if(data.status){
-                let link = streamer.baseUrl + '/live-stream-live/' + data.public;
+                let link = streamer.baseUrl + '/live-stream-live#' + data.public;
                 //console.log('showLink',showLink,link);
                 //var aTag = $('<a>').attr('href',link).appendTo(showLink)
                 $(showLink).html('<p><div class="label">' + chrome.i18n.getMessage("your_link") + '</div><a href="' +link+ '" target="_blank">' +link + '</a></p>');
